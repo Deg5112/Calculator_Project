@@ -11,40 +11,53 @@
 
 
 
-<div class="col-md-6 col-md-offset-3 text-center">
-    <div class="col-sm-12 btn btn-default"> <!--input-->
-        <input type="text" class="form-control">
+<div class="col-xs-6 col-xs-offset-3 text-center"><!--calc start-->
+
+    <div class="row">
+        <div class="col-xs-12"> <!--input-->
+            <input id='display' type="text" class="form-control span-12">
+        </div>
     </div>
 
         <!-- left col-->
-        <div class="col-sm-10">
-            <div class="clear col-sm-4 btn-default btn">C</div>
-            <div class="clear col-sm-4 btn-default btn">+/-</div>
-            <div class="clear col-sm-4 btn-default btn">%</div>
-            <div class="col-sm-4 btn-default btn">7</div>
-            <div class="col-sm-4 btn-default btn">8</div>
-            <div class="col-sm-4 btn-default btn">9</div>
-            <div class="col-sm-4 btn-default btn">4</div>
-            <div class="col-sm-4 btn-default btn">5</div>
-            <div class="col-sm-4 btn-default btn">6</div>
-            <div class="col-sm-4 btn-default btn">1</div>
-            <div class="col-sm-4 btn-default btn">2</div>
-            <div class="col-sm-4 btn-default btn">3</div>
-            <div class="col-sm-8 btn-default btn">0</div>
-            <div class="col-sm-4 btn-default btn">.</div>
+    <div class="row">
+        <div class="col-xs-10">
+            <button type='button' class="clear col-xs-4 btn-default btn">AC</button>
+            <button type='button' class="clear col-xs-4 btn-default btn">+/-</button>
+            <button type='button' class="clear col-xs-4 btn-default btn">%</button>
+            <button type='button' class="col-xs-4 btn-default btn">7</button>
+            <button type='button' class="col-xs-4 btn-default btn">8</button>
+            <button type='button' class="col-xs-4 btn-default btn">9</button>
+            <button type='button' class="col-xs-4 btn-default btn">4</button>
+            <button type='button' class="col-xs-4 btn-default btn">5</button>
+            <button type='button' class="col-xs-4 btn-default btn">6</button>
+            <button type='button' class="col-xs-4 btn-default btn">1</button>
+            <button type='button' class="col-xs-4 btn-default btn">2</button>
+            <button type='button' class="col-xs-4 btn-default btn">3</button>
+            <button type='button' class="col-xs-8 btn-default btn">0</button>
+            <button type='button' class="col-xs-4 btn-default btn">.</button>
         </div>
+
+        <div class="col-xs-2">
+            <button type='button' class="col-xs-12 btn btn-default">/</button>
+            <button type='button' class="col-xs-12 btn btn-default">X</button>
+            <button type='button' class="col-xs-12 btn btn-default">-</button>
+            <button type='button' class="col-xs-12 btn btn-default">+</button>
+            <button type='button' class="col-xs-12 btn btn-default">=</button>
+        </div>
+
+    </div>
         <!-- right col-->
-        <div class="col-sm-2">
-            <div class="col-sm-12 btn btn-default">/</div>
-            <div class="col-sm-12 btn btn-default">X</div>
-            <div class="col-sm-12 btn btn-default">-</div>
-            <div class="col-sm-12 btn btn-default">+</div>
-            <div class="col-sm-12 btn btn-default">=</div>
-        </div>
+
+
 
 </div>
 
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="http://Learning-Fuze.github.io/calculator/calculator.js"></script>
+<script src="object.js"></script>
+<script src="main.js"></script>
 </body>
 </html>
