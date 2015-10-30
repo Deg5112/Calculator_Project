@@ -1,0 +1,50 @@
+*{
+    padding: 0 !important;
+    border: 1px solid black;
+}
+
+body{
+    width: 96vw;
+    height: 40em;
+    position: relative;
+    font-size: 4.5em !important;
+
+}
+
+.btn-default {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+    font-size: 1em !important;
+}
+
+.col-sm-12.btn.btn-default {
+    background-color: rgb(255, 193, 97);
+    color: white;
+}
+
+body div:first-child{
+
+}
+
+.clear{
+    background-color: #E4E4E4 !important;
+}
+
+.form-control{
+    height: 2em !important;
+    font-size: 1.2em !important;
+    background-color: #A80046 !important;
+    color:white !important;
+    text-align: right !important;
+    padding-right: .7em !important;
+}
+
+
+.col-xs-6.col-xs-offset-3.text-center {
+    margin-top: 10%;
+}
+
+.col-xs-12.btn.btn-default {
+    background-color: rgb(255, 161, 70);
+}
