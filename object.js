@@ -23,13 +23,48 @@ self.addItem(){
         }
     }
 }
-//
-self.createItem = function(operator){
+//calculator create item method if not a number
+self.createItem = function(operator){ //add createItem method to calculator
+    var r = new CalculatorItem(); //create new instance of item
     switch(operator){
         case '+':
-            r =
+            r = = new Plus();
     }
 }
-//
 
+//number object
+var number = function (num, callback){
+    var self = this;
+    var val = null;
+    calculatorItem.call(self, parseFloat(num));
+    if(callback && typeof callback == function){
+        self.displayElm.on('click', callback);
+    }
+}
+//operator object
+var operator = function (str){
+    var self = this;
+    calculatorItem.call(self, str);
+}
+operator.prototype.calculate= function(num1, num2){
+    var num1Value = num1;
+    var num2Value= num2;
+    if(typeof num1 == 'number'){
+        num1Value = new Number(num1)
+    }
+    if(typeof num2 == 'number'){
+        num2Value = new Number(num2);
+    }
+}
+
+//plus object
+var Plus = function(){
+    var self = this;
+    operator.call(self, '+');
+    self.calculate= function(num1, num2){
+        var values = operator.prototype.calculate.call(this, num1, num2);
+
+        return values[0] va;ies[1]
+    }
+}
 
