@@ -1,5 +1,5 @@
-model that updates the view
-what are we updating based on something thats updated by the user?
+//model that updates the view
+//what are we updating based on something thats updated by the user?
 function model(value){
     switch(value){
         case 'undefined':
