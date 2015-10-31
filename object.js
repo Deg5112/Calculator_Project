@@ -1,35 +1,15 @@
-//controller
-var calculator = function(model){
+var calculator = function(callback) {
     var self = this;
+    self.c = callback;
     self.arr = [];
 
-}
 
-self.addItem(){
-    if(typeof val === 'number'){
-        self.arr.push(val);g
-    }
-}
-
-
-var minus = function(n1, n2){
-    num1 = n1;
-    num2= n2;
-    difference = function(){
-        var result = n1 - n2;
-        return result;
-    }
-}
-
-var plus = function(n1, n2){
-    num1 = n1;
-    num2 = n2;
-    sum = function (){
-        var result = n1 + n2;
-        return result;
-    }
-}
-
-
-
-
+//allclear erases array and resets the display to none because we have no path for it , it's undefined
+    self.addToScreen = function (val) {
+        console.log('hello');
+        console.log('val');
+        self.c(val);
+    };
+        var $input = $('#display');
+    $input.val(val);
+};
