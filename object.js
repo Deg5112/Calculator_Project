@@ -10,6 +10,4 @@ var calculator = function(callback) {
         console.log('val');
         self.c(val);
     };
-        var $input = $('#display');
-    $input.val(val);
 };
