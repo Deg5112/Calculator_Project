@@ -1,15 +1,21 @@
-var calculator = function(callback){
+var calculator = function(callback) {
     var self = this;
     self.arr = [];
-    self.allClear = function(){
+    self.allClear = function () {
         $('#display').val('');
         self.arr = [];
-        console.log(self.arr);
     }
-    self.addToScreen = function(val){
-        console.log('add function running');
-        switch(val){
+
+    var num1;
+    var num2;
+    self.addToScreen = function (val) {
+        //you'll want to change this to.. define the val.. if not a num.. run this function.. if num.. run this..
+        switch (val) {
             case '%':
+                switch(self.arr.length){
+                    case 1:
+                        parse.float
+                }
 
 
                 break;
@@ -22,68 +28,77 @@ var calculator = function(callback){
                 break;
 
             case '/':
-                if(self.arr.length > 0 && self.arr.length < 2){
+                if (self.arr.length === 1) {//if there's already a num in arr[0]
                     self.arr.push(val);
-                    console.log(self.arr);
                     $('#display').val(val);
+                    num1 = self.arr[0];
+                    console.log(num1);
                 }
 
                 break;
 
             case 'x':
-                if(self.arr.length > 0 && self.arr.length < 2){
+                if (self.arr.length === 1) {
                     self.arr.push(val);
-                    console.log(self.arr);
                     $('#display').val(val);
+                    num1 = self.arr[0];
+                    console.log(num1);
                 }
 
                 break;
 
             case '-':
-                if(self.arr.length > 0 && self.arr.length < 2){
+                if (self.arr.length === 1) {
                     self.arr.push(val);
-                    console.log(self.arr);
                     $('#display').val(val);
+                    num1 = self.arr[0];
+                    console.log(num1);
                 }
 
                 break;
 
             case '+':
-                if(self.arr.length > 0 && self.arr.length < 2){
+                if (self.arr.length === 1) {
                     self.arr.push(val);
-                    console.log(self.arr);
                     $('#display').val(val);
+                    num1 = self.arr[0];
+                    console.log(num1);
                 }
 
                 break;
 
-            case '=':
-
-                break;
+            case '=': //if 3 items in array, run calculate method
+                if(self.arr.length===3){
+                    num2 = self.arr[2];
+                    self.calculate(self.arr, num1, num2);
+                }break;
 
             default:
-                if( isNaN(parseFloat(val) ) ){ //if not a number, check..
-                    console.log('not a number');
-                    console.log('self arr length: ' + self.arr.length);
-                    if(self.arr.length>0 && self.arr.length < 2){
+                //if val is a num
+                switch (self.arr.length) {
+                    case 0:
+                        $('#display').val(val);
+                        $(self.arr.push(val));
+                        break;
 
-                    }
-
-                }
-                if(self.arr.length<1) {// if no items in array
-                    $('#display').val(val);
-                    $(self.arr.push(val));
-                    console.log(self.arr);
-                    break;
-                }else{
-                    if(self.arr.length<2){ //concat if you click nums consecutively and only one item in array
+                    case 1:
                         var concat = self.arr[0] + val;
                         self.arr[0] = concat;
                         $('#display').val(concat);
-                        console.log(self.arr);
-                    }
-                }
-            }
-         }
-    }
+                        break;
 
+                    case 2:
+                        $('#display').val(val);
+                        self.arr.push(val);
+                        console.log(self.arr);
+                        break;
+                    case 3:
+                        var concatAgain = self.arr[2] + val;
+                        self.arr[2] = concatAgain;
+                        $('#display').val(concatAgain);
+                        console.log(self.arr);
+                        break;
+                }
+        }
+    };
+}
