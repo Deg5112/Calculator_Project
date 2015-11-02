@@ -1,12 +1,13 @@
-var callback = function(value){
-    //switch(value){
-    //    case 'undefined':
-    //        $('#display').val('');
-    //        break;
-    //    default:
-    //        $('#display').val(value);
-        console.log('new calc created');
+function callback(value){
+    switch(value){
+        case 'undefined':
+            $('#display').val('');
+            break;
+        default:
+            $('#display').val('');
+            break;
     }
+}
 
 
 var myCalc = new calculator(callback);
@@ -21,7 +22,7 @@ $(function(){
                myCalc.allClear();
                break;
            default:
-               myCalc.addToScreen(val);
+               myCalc.addItem(val);
        }
    });
 });
