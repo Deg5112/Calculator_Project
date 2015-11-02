@@ -4,7 +4,7 @@ function callback(value){
             $('#display').val('');
             break;
         default:
-            $('#display').val('');
+            $('#display').val(value);
             break;
     }
 }
@@ -15,7 +15,6 @@ var myCalc = new calculator(callback);
 
 $(function(){
    $('button').click(function(){
-       console.log('clicked');
      var val = $(this).text();
        switch(val){
            case 'AC':
