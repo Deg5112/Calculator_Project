@@ -22,11 +22,11 @@ calculator.prototype.operator = function(value){
             case 'x'://ran on equals or times on length = 3
                 curOperator.operation = function(num1, num2){
                     var product = num1 * num2;
+                    console.log(product + '' + typeof product);
                     self.c(product, 'product');
                     var curCalculation = new calculationItem(product, 'product', self.arr);
                     self.arr = [];
                     self.arr.push(curCalculation);// [ {sum}, {+}, {?} }
-                    
                     self.num1 = curCalculation.value;
 
                 };
@@ -67,9 +67,19 @@ calculator.prototype.operator = function(value){
                 break;
 
             case '=':
-                self.arr[1] = self.arr[0].history[1];//[num, op, num]
-                self.arr[1].operation(self.num1, self.num2);
-                break;
+                switch(length) {
+                    case 2:
+                        self.num2 = self.num1; //num1 is numObj value.. if we hit * = num 2 is num1
+                        self.arr[1].operation(self.num1, self.num2);  //returns [{Calc}, , ]
+                        console.log(self.arr);
+                        break;
+
+                    case 1:
+                        self.arr[1] = self.arr[0].history[1];//[num, op, num]
+                        self.arr[1].operation(self.num1, self.num2);
+                        console.log(self.arr);
+                        break;
+                }
         }
     }
 
