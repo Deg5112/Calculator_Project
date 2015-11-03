@@ -16,10 +16,18 @@ var calculator = function(callback) {
                 switch(value){
                     case '+/-':
                         if(self.arr.length>=1){
+                            console.log(self.arr);
                             var objVal = self.arr[(self.arr.length)-1].value;
                             objVal *= -1;
                             self.arr[(self.arr.length)-1].value = objVal;
                             self.c(objVal);
+                            switch(self.arr.length){
+                                case 1:
+                                    self.num1 = objVal;
+                                    break;
+                                case 3:
+                                    self.num2 = objVal;
+                            }
                         }
 
                         break;
@@ -29,6 +37,13 @@ var calculator = function(callback) {
                             objVal /= 100;
                             self.arr[(self.arr.length)-1].value = objVal;
                             self.c(objVal);
+                            switch(self.arr.length){
+                                case 1:
+                                    self.num1 = objVal;
+                                    break;
+                                case 3:
+                                    self.num2 = objVal;
+                            }
                             break;
                         }
                     case '.':

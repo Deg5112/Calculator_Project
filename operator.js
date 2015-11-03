@@ -12,7 +12,7 @@ calculator.prototype.operator = function(value){
                     self.arr = [];
                     var curCalculation = new calculationItem(quotient, 'quotient');
                     self.arr.push(curCalculation);// [ {sum}, {+}, {?} }
-                    self.num1 = curCalculation.calculation;
+                    self.num1 = curCalculation.value;
                 };
                 //do this if length = 1
                 self.arr.push(curOperator);
@@ -27,7 +27,7 @@ calculator.prototype.operator = function(value){
                     var curCalculation = new calculationItem(product, 'product');
                     self.arr.push(curCalculation);// [ {sum}, {+}, {?} }
                     
-                    self.num1 = curCalculation.calculation;
+                    self.num1 = curCalculation.value;
 
                 };
                 //do this if length = 1
@@ -42,7 +42,7 @@ calculator.prototype.operator = function(value){
                     self.arr = [];
                     var curCalculation = new calculationItem(difference, 'difference');
                     self.arr.push(curCalculation);// [ {sum}, {+}, {?} }
-                    self.num1 = curCalculation.calculation;
+                    self.num1 = curCalculation.value;
                 };
                 //do this if length = 1
                 self.arr.push(curOperator);
@@ -57,7 +57,7 @@ calculator.prototype.operator = function(value){
                     self.arr = [];
                     var curCalculation = new calculationItem(sum, 'sum');//make object, clear array, push into array
                     self.arr.push(curCalculation);// [ {sum}, {+}, {?} }
-                    self.num1 = curCalculation.calculation;
+                    self.num1 = curCalculation.value;
                     
                 };
                 //do this if length = 1
@@ -82,7 +82,7 @@ calculator.prototype.operator = function(value){
                    self.arr = [];
                    var curCalculation = new calculationItem(sum, 'sum');//make object, clear array, push into array
                    self.arr.push(curCalculation);// [ {sum}, {+}, {?} }
-                   self.num1 = curCalculation.calculation;
+                   self.num1 = curCalculation.value;
                    
                };
                self.arr.push(curOperator);
@@ -97,7 +97,7 @@ calculator.prototype.operator = function(value){
                    self.arr = [];
                    var curCalculation = new calculationItem(difference, 'difference');
                    self.arr.push(curCalculation);// [ {sum}, {+}, {?} }
-                   self.num1 = curCalculation.calculation;
+                   self.num1 = curCalculation.value;
                };
                self.arr.push(curOperator);
                
@@ -111,7 +111,7 @@ calculator.prototype.operator = function(value){
                    self.arr = [];
                    var curCalculation = new calculationItem(quotient, 'quotient');
                    self.arr.push(curCalculation);// [ {sum}, {+}, {?} }
-                   self.num1 = curCalculation.calculation;
+                   self.num1 = curCalculation.value;
                };
                self.arr.push(curOperator);
                
@@ -125,8 +125,7 @@ calculator.prototype.operator = function(value){
                    self.arr = [];
                    var curCalculation = new calculationItem(product, 'product');
                    self.arr.push(curCalculation);// [ {sum}, {+}, {?} }
-                   
-                   self.num1 = curCalculation.calculation;
+                   self.num1 = curCalculation.value;
                };
                self.arr.push(curOperator);
                
@@ -153,6 +152,6 @@ var operator = function(value){
 };
 
 var calculationItem = function(calculation, type){
-    this.calculation = calculation;
+    this.value = calculation;
     this.type = type;
 };
