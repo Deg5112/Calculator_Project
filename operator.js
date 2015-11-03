@@ -3,19 +3,19 @@ calculator.prototype.operator = function(value){
     length = self.arr.length;
     var curOperator = new operator(value);//make new operator object
 
-    if(length===1){                     //only one item in array
+    if(length===1 || length===2){                     //only one item in array
         switch(value){
             case '/':
                 curOperator.operation = function(num1, num2){
                     var quotient = num1/num2;
                     self.c(quotient, 'quotient');
+                    var curCalculation = new calculationItem(quotient, 'quotient', self.arr);
                     self.arr = [];
-                    var curCalculation = new calculationItem(quotient, 'quotient');
                     self.arr.push(curCalculation);// [ {sum}, {+}, {?} }
                     self.num1 = curCalculation.value;
                 };
                 //do this if length = 1
-                self.arr.push(curOperator);
+                self.arr[1] = curOperator;
                 self.c(curOperator.value);
                 break;
 
@@ -23,15 +23,15 @@ calculator.prototype.operator = function(value){
                 curOperator.operation = function(num1, num2){
                     var product = num1 * num2;
                     self.c(product, 'product');
+                    var curCalculation = new calculationItem(product, 'product', self.arr);
                     self.arr = [];
-                    var curCalculation = new calculationItem(product, 'product');
                     self.arr.push(curCalculation);// [ {sum}, {+}, {?} }
                     
                     self.num1 = curCalculation.value;
 
                 };
                 //do this if length = 1
-                self.arr.push(curOperator);
+                self.arr[1] = curOperator;
                 self.c(curOperator.value);
                 break;
 
@@ -39,13 +39,13 @@ calculator.prototype.operator = function(value){
                 curOperator.operation = function(num1, num2){
                     var difference = num1 - num2;
                     self.c(difference, 'difference');
+                    var curCalculation = new calculationItem(difference, 'difference', self.arr);
                     self.arr = [];
-                    var curCalculation = new calculationItem(difference, 'difference');
                     self.arr.push(curCalculation);// [ {sum}, {+}, {?} }
                     self.num1 = curCalculation.value;
                 };
                 //do this if length = 1
-                self.arr.push(curOperator);
+                self.arr[1] = curOperator;
                 self.c(curOperator.value);
                 break;
 
@@ -54,16 +54,21 @@ calculator.prototype.operator = function(value){
                 curOperator.operation = function(num1, num2){////if equals operator is hit on three this method is also ran
                     var sum = num1 + num2;
                     self.c(sum, 'sum');//call function have it put sum on screen
+                    var curCalculation = new calculationItem(sum, 'sum', self.arr);//make object, clear array, push into array
                     self.arr = [];
-                    var curCalculation = new calculationItem(sum, 'sum');//make object, clear array, push into array
                     self.arr.push(curCalculation);// [ {sum}, {+}, {?} }
                     self.num1 = curCalculation.value;
+
                     
                 };
-                //do this if length = 1
-                self.arr.push(curOperator);//no calculation made, just push operator into middle slot of array
+                //do this if length = 1 or two
+                self.arr[1] = curOperator;//either make the arr[1] the operator object.. or replace the current one
                 self.c(curOperator.value);//then put it up on the screen
+                break;
 
+            case '=':
+                self.arr[1] = self.arr[0].history[1];//[num, op, num]
+                self.arr[1].operation(self.num1, self.num2);
                 break;
         }
     }
@@ -73,9 +78,10 @@ calculator.prototype.operator = function(value){
 
     //TODO we had to readd the method to the object when replacing that as the middle operator in the array. maybe make the plus objects and so on?
     if(length === 3) {
+        self.lastNumber = self.arr[length-1];
        switch(value){
            case '+':
-               self.calculate(self.num1, self.num2);
+               self.calculate(self.num1, self.num2);//run current middle operator method, then create a new one for the curOperator
                curOperator.operation = function(num1, num2){////if equals operator is hit on three this method is also ran
                    var sum = num1 + num2;
                    self.c(sum, 'sum');//call function have it put sum on screen
@@ -85,7 +91,7 @@ calculator.prototype.operator = function(value){
                    self.num1 = curCalculation.value;
                    
                };
-               self.arr.push(curOperator);
+               self.arr[1] = curOperator;
                
                break;
 
@@ -99,7 +105,7 @@ calculator.prototype.operator = function(value){
                    self.arr.push(curCalculation);// [ {sum}, {+}, {?} }
                    self.num1 = curCalculation.value;
                };
-               self.arr.push(curOperator);
+               self.arr[1] = curOperator;
                
                break;
 
@@ -113,7 +119,7 @@ calculator.prototype.operator = function(value){
                    self.arr.push(curCalculation);// [ {sum}, {+}, {?} }
                    self.num1 = curCalculation.value;
                };
-               self.arr.push(curOperator);
+               self.arr[1] = curOperator;
                
                break;
 
@@ -127,22 +133,22 @@ calculator.prototype.operator = function(value){
                    self.arr.push(curCalculation);// [ {sum}, {+}, {?} }
                    self.num1 = curCalculation.value;
                };
-               self.arr.push(curOperator);
-               
+               self.arr[1] = curOperator;
                break;
-
-           default:
-                self.calculate(self.num1, self.num2);
-               
+            //if '=' is hit after length is 3..
+           case '=':
+               self.calculate(self.num1, self.num2);
                break;
        }
     }
 };
 
+
+
 //calculation method, finds middle arr val and runs the operation method on it
 calculator.prototype.calculate = function(num1, num2){//we also make a prototype so we can access the array
     var self = this;
-    self.arr[1].operation(num1, num2);//run operation method on middle operator
+    self.arr[1].operation(num1, num2);//run operation method on middle operator, this performs the operation and makes a new calculation object
 };
 
 //operator object that holds value and operation method
@@ -151,7 +157,8 @@ var operator = function(value){
     this.type = 'operator';
 };
 
-var calculationItem = function(calculation, type){
+var calculationItem = function(calculation, type, history){
     this.value = calculation;
     this.type = type;
+    this.history = history;
 };
