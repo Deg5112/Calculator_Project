@@ -26,13 +26,16 @@ calculator.prototype.addNum = function(value){
             self.arr.push(curNumObject);//push object into array
             self.num2 = curNumObject.value;
             self.c(self.num2);
+            console.log(self.arr);
             break;
         case 3: //concat
-            concat = self.num2 + "" + curNumObject.value;
-            self.num1 = parseFloat(concat);
+            concatAgain = self.num2 + "" + curNumObject.value;
+            console.log('concatAgain' + ' ' + concatAgain);
+            self.num2 = parseFloat(concatAgain);
             curNumObject.value = self.num2;
             self.arr[2] = curNumObject;
             self.c(self.num2);
+            console.log(self.arr);
             break;
     }
 
