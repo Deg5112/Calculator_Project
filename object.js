@@ -7,10 +7,9 @@ var calculator = function(callback) {
         $('#display').val('');
         self.arr = [];
     };
-    var num1;
-    var num2;
-    var concat;
-    var concatAgain;
+    self.num1;
+    self.num2;
+
     self.addItem = function(value){
            if( isNaN(parseFloat(value)) ) {//if not a number
                 switch(value){
