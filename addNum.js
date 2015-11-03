@@ -31,7 +31,7 @@ calculator.prototype.addNum = function(value){
             self.c(num2);
             break;
     }
-    console.log(self.arr);
+
 }
 
 //new number object
