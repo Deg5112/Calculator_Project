@@ -1,8 +1,8 @@
 var calculator = function(callback) {
     var self = this;
     self.arr = [];
-    var length;
     self.c = callback;
+    self.lastNumber;
     self.allClear = function () {
         $('#display').val('');
         self.arr = [];
@@ -15,10 +15,16 @@ var calculator = function(callback) {
            if( isNaN(parseFloat(value)) ) {//if not a number
                 switch(value){
                     case '+/-':
-                        //TODO add functionality
+                        var objVal = self.arr[(self.arr.length)-1].value;
+                            objVal *= -1;
+                            self.arr[(self.arr.length)-1].value = objVal;
+                            self.c(objVal);
                         break;
                     case '%':
-                        //TODO add functionality
+                        var objVal = self.arr[(self.arr.length)-1].value;
+                        objVal /= 100;
+                        self.arr[(self.arr.length)-1].value = objVal;
+                        self.c(objVal);//TODO add functionality
                         break;
                     default:
                         self.operator(value);

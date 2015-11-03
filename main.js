@@ -1,4 +1,4 @@
-function callback(value){
+function callback(value, type){
     switch(value){
         case 'undefined':
             $('#display').val('');

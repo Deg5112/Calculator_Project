@@ -1,6 +1,6 @@
 calculator.prototype.addNum = function(value){
     var self = this;
-    length = self.arr.length;
+    var length = self.arr.length;
     var curNumObject = new number(parseFloat(value));
 
     switch (length){
@@ -32,7 +32,7 @@ calculator.prototype.addNum = function(value){
             break;
     }
 
-}
+};
 
 //new number object
 //params : value of selected number
