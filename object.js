@@ -32,15 +32,28 @@ var calculator = function(callback) {
                             break;
                         }
                     case '.':
-                        if(self.arr.length>=1){
+                        if(self.arr.length>=1) {
+                            console.log(self.arr);
+                            var objVal = self.arr[(self.arr.length) - 1].value;
+                            var string = objVal.toString();
+                            for(var i = 0; i<string.length; i++){
+                                if(string[i]==='.'){
+                                    return;
+                                }
+                            }
                             if (objVal % 1 === 0) {
                                 var result = objVal + '.';
-                                console.log(result);
-                                self.arr[(self.arr.length)-1].value = result;
+                                self.arr[(self.arr.length) - 1].value = result;
                                 self.c(result);
-                                self.num1 = result;
+                                if(self.arr.length === 1){
+                                    self.num1 = result;
+                                }else if(self.arr.length === 3){
+                                    self.num2 = result;
+
+                                }
                             }
                         }
+
                         break;
 
                     default:
