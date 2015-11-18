@@ -1,4 +1,4 @@
-function callback(value, type){
+function displayOnScreen(value){
     switch(value){
         case 'undefined':
             $('#display').val('');
@@ -9,9 +9,7 @@ function callback(value, type){
     }
 }
 
-
-var myCalc = new calculator(callback);
-
+var newCalc = new calculator(displayOnScreen);
 
 $(function(){
    $('button').click(function(){

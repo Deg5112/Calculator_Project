@@ -1,7 +1,4 @@
-*{
-    padding: 0 !important;
-    border: 1px solid black;
-}
+
 
 body{
     width: 96vw;
@@ -9,6 +6,11 @@ body{
     position: relative;
     font-size: 4.5em !important;
 
+}
+
+.col-xs-12.col-sm-8.text-center {
+    background-color: black;
+    padding-bottom: 3%;
 }
 
 .btn-default {
@@ -21,10 +23,6 @@ body{
 .col-sm-12.btn.btn-default {
     background-color: rgb(255, 193, 97);
     color: white;
-}
-
-body div:first-child{
-
 }
 
 .clear{
@@ -40,11 +38,19 @@ body div:first-child{
     padding-right: .7em !important;
 }
 
-
-.col-xs-6.col-xs-offset-3.text-center {
-    margin-top: 10%;
-}
-
 .col-xs-12.btn.btn-default {
     background-color: rgb(255, 161, 70);
+}
+
+.leftCol{
+    padding-right: 0 !important;
+}
+
+.rightCol{
+    padding-left: 0 !important;
+}
+
+.row:first-child{
+    margin-top: 5%;
+
 }
