@@ -73,14 +73,24 @@ var calculator = function(callback) {
                     break;
 
                 default:
-                    var operator = this.createItem(value);//create the appropriate operator object
+                    var operator;//create the appropriate operator object
 
                     switch(this.array.length){
                         case 1:
+                            for(var v = 0; v<this.num1.length; v++){
+                                 if( (this.num1[v] === '(')  && (this.num1[this.num1.length-1] !== '(') ){ //if we hit an operator value.. if theres a '(' in num1, and last letter is not '('
+                                    this.num1 = this.num1 + value;
+                                    this.callback(this.num1);
+                                    return;
+                                }
+                            }
+                            //otherwise.. create the operator object and stick it in arr[1]
+                            operator = this.createItem(value);
                             this.array.push(operator); //update model
                             this.callback(value); //update view
                             break;
                         case 3:
+                            var operator = this.createItem(value);
                             var calculation = this.array[1].calculate( parseFloat(this.num1), parseFloat(this.num2) );
                             this.array = [];
                             this.array.push(calculation, operator);
@@ -127,10 +137,8 @@ var calculator = function(callback) {
                 switch(this.array.length) {
                     case 1:
                         for (var q = 0; q < this.num1.length; q++) { //if cur index has a ')' do nothing,
-                            if (this.num1[x] === ')') {
-                                return;
-                            }
-                            else if (
+                            if (
+                                (this.num1[q] === ')') &&
                                 (this.num1[length - 1] !== '(') &&
                                 (this.num1[length - 1] !== '+') &&
                                 (this.num1[length - 1] !== '-') &&
@@ -138,11 +146,12 @@ var calculator = function(callback) {
                                 (this.num1[length - 1] !== '*')
                             )
                             {//if last val in num1 string is not '(' or a string operator we know there's a number after.
-                                this.num1 = this.num1 + value;
-                                this.array[0] = this.num1;
-                                this.callback(this.num1);
+                                return;
                             }
                         }
+                        this.num1 = this.num1 + value;
+                        this.array[0] = this.num1;
+                        this.callback(this.num1);
                     //TODO this part won't work because you didn't tell your operators what to do
 
                         break;
