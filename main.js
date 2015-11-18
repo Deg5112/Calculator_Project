@@ -16,10 +16,10 @@ $(function(){
      var val = $(this).text();
        switch(val){
            case 'AC':
-               myCalc.allClear();
+               newCalc.allClear();
                break;
            default:
-               myCalc.addItem(val);
+               newCalc.addItem(val);
        }
    });
 });
