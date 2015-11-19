@@ -73,13 +73,14 @@ var calculator = function(callback) {
                     break;
 
                 default:
-                    var operator;//create the appropriate operator object
+                    var operator;
 
                     switch(this.array.length){
                         case 1:
+                            //if we hit an operator value.. if theres a '(' in num1, and last letter is not '('
                             for(var v = 0; v<this.num1.length; v++){
-                                 if( (this.num1[v] === '(')  && (this.num1[this.num1.length-1] !== '(') ){ //if we hit an operator value.. if theres a '(' in num1, and last letter is not '('
-                                    this.num1 = this.num1 + value;
+                                 if( (this.num1[v] === '(')  && (this.num1[this.num1.length-1] !== '(') && (this.num1[this.num1.length-1] !== ')') ){
+                                    this.num1 = this.num1 + value;  //then concat with num1
                                     this.callback(this.num1);
                                     return;
                                 }
@@ -94,7 +95,6 @@ var calculator = function(callback) {
                             var calculation = this.array[1].calculate( parseFloat(this.num1), parseFloat(this.num2) );
                             this.array = [];
                             this.array.push(calculation, operator);
-                            console.log(this.array);
                             break;
                     }
             }
@@ -145,7 +145,7 @@ var calculator = function(callback) {
                                 (this.num1[length - 1] !== '/') &&
                                 (this.num1[length - 1] !== '*')
                             )
-                            {//if last val in num1 string is not '(' or a string operator we know there's a number after.
+                            {
                                 return;
                             }
                         }
@@ -153,7 +153,6 @@ var calculator = function(callback) {
                         this.array[0] = this.num1;
                         this.callback(this.num1);
                     //TODO this part won't work because you didn't tell your operators what to do
-
                         break;
 
                     case 3:
