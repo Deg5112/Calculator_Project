@@ -1,4 +1,6 @@
 //TODO update the view so you see the entire string/history
+//TODO regex for calculating the string because you can't do the eval anymoreee...
+//TODO equal sign operator needs to be finished..
 var calculator = function(callback) {
     this.array = [];
     this.num1;
@@ -184,11 +186,12 @@ var calculator = function(callback) {
                         break;
                 }
             }else if( value === ')' ){ //scenarios for ')'
+                var openCount = 0;
+                var closeCount = 0;
                 switch(this.array.length) {
                     case 1:
-                        for (var q = 0; q < this.num1.length; q++) { //if cur index has a ')' do nothing,
+                         //if last string val of num1 any one below.. do nothing
                                 if (
-                                    (this.num1[q] === ')') ||
                                     (this.num1[this.num1.length - 1] === '(') ||
                                     (this.num1[this.num1.length  - 1] === '+') ||
                                     (this.num1[this.num1.length  - 1] === '-') ||
@@ -197,11 +200,26 @@ var calculator = function(callback) {
                                 ) {
                                     return;
                                 }
+                        for(var o = 0; o<this.num1.length; o++){
+                            if (this.num1[o] === '('){
+                                openCount+=1;
                             }
+                            if (this.num1[o] === ')'){
+                                closeCount+=1;
+                            }
+                        }
+                        if(openCount>closeCount){
+                            this.num1 = this.num1 + value;
+                            this.array[0] = this.num1;
+                            this.callback(this.num1);
+                            return;
+                        }
 
-                        this.num1 = this.num1 + value;
-                        this.array[0] = this.num1;
-                        this.callback(this.num1);
+
+                        //otherwise.. add it to the string and update view and model.
+                        //this.num1 = this.num1 + value;
+                        //this.array[0] = this.num1;
+                        //this.callback(this.num1);
 
                         break;
 
