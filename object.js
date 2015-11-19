@@ -78,6 +78,9 @@ var calculator = function(callback) {
                     switch(this.array.length){
                             case 1:
                                 //if we hit an operator + - * value.. if theres a '(' in num1, and last letter is not '(' or ')' or 'operator'
+                                if(this.num1[this.num1.length-1] === '('){
+                                    return;
+                                }
                                 for(var v = 0; v<this.num1.length; v++){
                                     if( (this.num1[v] === '(') &&
                                         (this.num1[this.num1.length-1] !== '(') &&
@@ -115,6 +118,7 @@ var calculator = function(callback) {
                                         this.callback(this.num1);
                                         return;
                                     }
+                                    //if(this.num1[v])
                                 }
                                     operator = this.createItem(value);
                                     this.array.push(operator); //update model
@@ -152,13 +156,17 @@ var calculator = function(callback) {
                         this.callback('(');
                         break;
 
-                    case 1:
-
-                        for(var x = 0; x<this.num1.length; x++){ //if cur index has a ')' do nothing,
-                            if( (this.num1[x] === ')') || (this.num1[x] ==='(') ){
-                                return;
-                            }
+                    case 1:  //if last string val of num1 is any of below.. do nothing,
+                        if( (this.num1[this.num1.length-1] === '(') ||
+                            (this.num1[this.num1.length  - 1] === '+') ||
+                            (this.num1[this.num1.length  - 1] === '-') ||
+                            (this.num1[this.num1.length  - 1] === '/') ||
+                            (this.num1[this.num1.length  - 1] === 'x') )
+                        {
+                            return;
                         }
+
+                        //otherwise.. if last item is a number.. it's okay to open another parenths
                         this.num1 = this.num1 + '*' + value;
                         this.array[0] = this.num1;
                         this.callback(this.num1);
@@ -211,10 +219,12 @@ var calculator = function(callback) {
                         break;
 
                     case 1:
-                        for(var p in this.num1){
-                            if(this.num1[p]===')'){
-                                return;
-                            }
+                        // last letter is closed.. and we hit a number.. then ) * num
+                        if(this.num1[this.num1.length-1]===')'){
+                            this.num1 = this.num1 + '*' + value;
+                            this.array[0] = this.num1;
+                            this.callback(this.num1);
+                            return;
                         }
 
                         this.num1 = this.num1 + value;  //still string, concat
