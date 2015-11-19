@@ -74,27 +74,69 @@ var calculator = function(callback) {
 
                 default:
                     var operator;
-
+                        //if it's an operator..
                     switch(this.array.length){
-                        case 1:
-                            //if we hit an operator value.. if theres a '(' in num1, and last letter is not '('
-                            for(var v = 0; v<this.num1.length; v++){
-                                 if( (this.num1[v] === '(')  && (this.num1[this.num1.length-1] !== '(') && (this.num1[this.num1.length-1] !== ')') ){
-                                    this.num1 = this.num1 + value;  //then concat with num1
-                                    this.callback(this.num1);
-                                    return;
+                            case 1:
+                                //if we hit an operator + - * value.. if theres a '(' in num1, and last letter is not '(' or ')' or 'operator'
+                                for(var v = 0; v<this.num1.length; v++){
+                                    if( (this.num1[v] === '(') &&
+                                        (this.num1[this.num1.length-1] !== '(') &&
+                                        (this.num1[this.num1.length-1] !== ')') &&
+                                        (this.num1[this.num1.length-1] !== '+') &&
+                                        (this.num1[this.num1.length-1] !== '-') &&
+                                        (this.num1[this.num1.length-1] !== '*') &&
+                                        (this.num1[this.num1.length-1] !== '/')
+                                    )
+                                    {
+                                        //only concatonate if above is true
+                                        this.num1 = this.num1 + value;  //then concat then return
+                                        this.callback(this.num1);
+                                        break;
+                                    }
+
+                                    if (this.num1[this.num1.length-1] === ')') {
+                                        operator = this.createItem(value);   //otherwise.. create the operator object and stick it in arr[1]
+                                        this.array.push(operator); //update model
+                                        this.callback(value); //update view
+                                        break;
+                                    }
+
+                                    if( (this.num1[v] === '(') &&
+                                        (this.num1[this.num1.length-1] === '(') ||
+                                        (this.num1[this.num1.length-1] === ')') ||
+                                        (this.num1[this.num1.length-1] === '+') ||
+                                        (this.num1[this.num1.length-1] === '-') ||
+                                        (this.num1[this.num1.length-1] === '*') ||
+                                        (this.num1[this.num1.length-1] === '/')
+                                    )
+                                    {
+                                        var newString = this.num1.slice(0, this.num1.length-1);
+                                        newString += value;
+                                        this.num1 = newString;
+                                        this.array[0] = this.num1;
+                                        this.callback(this.num1);
+                                    }
+
                                 }
-                            }
-                            //otherwise.. create the operator object and stick it in arr[1]
-                            operator = this.createItem(value);
-                            this.array.push(operator); //update model
-                            this.callback(value); //update view
+
+
+                                operator = this.createItem(value);
+                                this.array.push(operator); //update model
+                                this.callback(value); //update view
+                                break;
+
+
+
+
                             break;
+
                         case 3:
-                            var operator = this.createItem(value);
+                            operator = this.createItem(value);
                             var calculation = this.array[1].calculate( parseFloat(this.num1), parseFloat(this.num2) );
                             this.array = [];
                             this.array.push(calculation, operator);
+                            this.num1 = calculation;
+                            this.callback(this.num1);
                             break;
                     }
             }
@@ -137,22 +179,22 @@ var calculator = function(callback) {
                 switch(this.array.length) {
                     case 1:
                         for (var q = 0; q < this.num1.length; q++) { //if cur index has a ')' do nothing,
-                            if (
-                                (this.num1[q] === ')') &&
-                                (this.num1[length - 1] !== '(') &&
-                                (this.num1[length - 1] !== '+') &&
-                                (this.num1[length - 1] !== '-') &&
-                                (this.num1[length - 1] !== '/') &&
-                                (this.num1[length - 1] !== '*')
-                            )
-                            {
-                                return;
+                                if (
+                                    (this.num1[q] === ')') ||
+                                    (this.num1[this.num1.length - 1] === '(') ||
+                                    (this.num1[this.num1.length  - 1] === '+') ||
+                                    (this.num1[this.num1.length  - 1] === '-') ||
+                                    (this.num1[this.num1.length  - 1] === '/') ||
+                                    (this.num1[this.num1.length  - 1] === '*')
+                                ) {
+                                    return;
+                                }
                             }
-                        }
+
                         this.num1 = this.num1 + value;
                         this.array[0] = this.num1;
                         this.callback(this.num1);
-                    //TODO this part won't work because you didn't tell your operators what to do
+
                         break;
 
                     case 3:
@@ -169,6 +211,12 @@ var calculator = function(callback) {
                         break;
 
                     case 1:
+                        for(var p in this.num1){
+                            if(this.num1[p]===')'){
+                                return;
+                            }
+                        }
+
                         this.num1 = this.num1 + value;  //still string, concat
                         this.array[0] = this.num1;
                         this.callback(this.num1);
