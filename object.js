@@ -84,29 +84,27 @@ var calculator = function(callback) {
                                         (this.num1[this.num1.length-1] !== ')') &&
                                         (this.num1[this.num1.length-1] !== '+') &&
                                         (this.num1[this.num1.length-1] !== '-') &&
-                                        (this.num1[this.num1.length-1] !== '*') &&
+                                        (this.num1[this.num1.length-1] !== 'x') &&
                                         (this.num1[this.num1.length-1] !== '/')
                                     )
                                     {
                                         //only concatonate if above is true
                                         this.num1 = this.num1 + value;  //then concat then return
                                         this.callback(this.num1);
-                                        break;
+                                        return;
                                     }
 
                                     if (this.num1[this.num1.length-1] === ')') {
                                         operator = this.createItem(value);   //otherwise.. create the operator object and stick it in arr[1]
                                         this.array.push(operator); //update model
                                         this.callback(value); //update view
-                                        break;
+                                        return;
                                     }
 
-                                    if( (this.num1[v] === '(') &&
-                                        (this.num1[this.num1.length-1] === '(') ||
-                                        (this.num1[this.num1.length-1] === ')') ||
+                                    if( (this.num1[v] === '(') &&   // if any letters are open paren..
                                         (this.num1[this.num1.length-1] === '+') ||
                                         (this.num1[this.num1.length-1] === '-') ||
-                                        (this.num1[this.num1.length-1] === '*') ||
+                                        (this.num1[this.num1.length-1] === 'x') ||
                                         (this.num1[this.num1.length-1] === '/')
                                     )
                                     {
@@ -115,15 +113,15 @@ var calculator = function(callback) {
                                         this.num1 = newString;
                                         this.array[0] = this.num1;
                                         this.callback(this.num1);
+                                        return;
                                     }
-
                                 }
+                                    operator = this.createItem(value);
+                                    this.array.push(operator); //update model
+                                    this.callback(value); //update view
 
 
-                                operator = this.createItem(value);
-                                this.array.push(operator); //update model
-                                this.callback(value); //update view
-                                break;
+                            //TODO need regex for parenth
 
 
 
@@ -137,6 +135,8 @@ var calculator = function(callback) {
                             this.array.push(calculation, operator);
                             this.num1 = calculation;
                             this.callback(this.num1);
+                            var asdf = /[d]./;
+
                             break;
                     }
             }
@@ -185,7 +185,7 @@ var calculator = function(callback) {
                                     (this.num1[this.num1.length  - 1] === '+') ||
                                     (this.num1[this.num1.length  - 1] === '-') ||
                                     (this.num1[this.num1.length  - 1] === '/') ||
-                                    (this.num1[this.num1.length  - 1] === '*')
+                                    (this.num1[this.num1.length  - 1] === 'x')
                                 ) {
                                     return;
                                 }
