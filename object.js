@@ -1,7 +1,9 @@
 //TODO update the view so you see the entire string/history
 //TODO regex for calculating the string because you can't do the eval anymoreee...
 //TODO equal sign operator needs to be finished..
+//TODO need to do the parenths for the case 3: for everythang..
 var calculator = function(callback) {
+    var self = this;
     this.array = [];
     this.num1;
     this.num2;
@@ -10,6 +12,87 @@ var calculator = function(callback) {
     this.allClear = function () { //AC is hit and it clears display and empties array
         $('#display').val('');
         this.arr = [];
+    };
+    this.openCount = 0;
+    this.closeCount = 0;
+
+    this.calculateParenths = function(string){
+        var operator;
+        string.indexOf(')');
+        string.lastIndexOf('(');
+        var newArr;
+        var num1 = '';
+        var num2 = '';
+        finalArray = [];
+        var operator;
+        var opCount;
+        var result = string.substring( string.lastIndexOf('(')+1, string.indexOf(')')) ;
+        var newArray = result.split('');
+        console.log(newArray);
+        for(var i = 0; i<newArray.length;i++){
+
+            if( (newArray[i]==='-')||(newArray[i]==='+')||(newArray[i]==='x')||(newArray[i]==='/') ){ //if operator
+                newArray[i] = self.createItem( newArray[i] ); //create operator object
+                    if(newArray[i].priority){//if the value is an operate and has priority true
+                        //get num 2 right of op
+                        for(var x = i + 1; x<newArray.length;x++){
+
+                            if( !(isNaN(parseFloat(newArray[x]))) ){ //starting one index to the right of operator
+
+                                    num2 += newArray[x];
+                            }else{
+                                break;
+                            }
+
+                        }
+
+                        //get num 1 left of op
+                        for(var y = i - 1; y>=0;y--){
+                            console.log('y : ' + y);
+                            if(!(isNaN(parseFloat(newArray[y])))){ //starting one index to the right of operator
+                                num1 = newArray[y] + num1;
+                            }else{
+                                break;
+                            }
+                        }
+                        console.log(num1, num2);
+                        return;
+                        //TODO functionality for finding num1 and num2 and if first operator is high priority.. finish this and also do the scenario if first op is not high priority
+
+                        //while(typeof parseFloat(newArray[x]) === 'number'){
+                        //    console.log('hello again');
+                        //    num2 += newArray[x];
+                        //    x++;
+                        //}
+                        //console.log(num1);
+                        //while(typeof parseFloat(newArray[y]) === 'number'){
+                        //    num1 = newArray[y] + num1;
+                        //    y--;
+                        //}
+                        //console.log(num2);
+                    }
+            }
+
+
+        }
+        //if we complete our loop and don't run into any high priority operators.. run the first one.
+        //for(var n = 0; n<newArray.length;n++){
+        //    if( (newArray[n] instanceof 'plus') (newArray[n] instanceof 'minus') ) {
+        //        var x = i + 1; //we'll start at the next index over
+        //        //var y = i-1;
+        //        for(x; x<newArray.length;x++){
+        //            if(typeof parseFloat(newArray[x]) === 'number'){
+        //                console.log('hello again');
+        //                num2 += newArray[x];
+        //                x++;
+        //            }
+        //            console.log(num2);
+        //        }
+        //    }
+        //}
+
+        //finalArray.push(num1, operator, num2);
+        //console.log(finalArray);
     };
 
     //method that either updates the display, and the model, and desi
@@ -21,7 +104,7 @@ var calculator = function(callback) {
 
                 case '+/-':
                     if (this.array.length >= 1) {
-                        console.log(this.array);
+
                         var objVal = this.array[(this.array.length) - 1].value;
                         objVal *= -1;
                         this.array[(this.array.length) - 1].value = objVal;
@@ -99,11 +182,27 @@ var calculator = function(callback) {
                                         return;
                                     }
 
+                                    if (this.num1[v] === '('){
+                                        this.openCount+=1;
+                                    }
+                                    if (this.num1[v] === ')'){
+                                        this.closeCount+=1;
+                                    }
+
+
                                     if (this.num1[this.num1.length-1] === ')') {
+                                       // if the last item is ')' and also open and close count are equal..
+                                        if(this.openCount === this.closeCount){
+                                            self.calculateParenths(this.num1);
+
+                                            //your'e going to want to make the op object and put into array[1].. but before make num1 into calculation object
                                         operator = this.createItem(value);   //otherwise.. create the operator object and stick it in arr[1]
                                         this.array.push(operator); //update model
                                         this.callback(value); //update view
+                                        this.openCount = 0;
+                                        this.closeCount = 0;//make parenths count back to 0
                                         return;
+                                        }
                                     }
 
                                     if( (this.num1[v] === '(') &&   // if any letters are open paren..
@@ -154,7 +253,7 @@ var calculator = function(callback) {
                     case 0:
                         this.num1 = value;
                         this.array.push(this.num1);
-                        console.log(this.array);
+
                         this.callback('(');
                         break;
 
@@ -186,8 +285,7 @@ var calculator = function(callback) {
                         break;
                 }
             }else if( value === ')' ){ //scenarios for ')'
-                var openCount = 0;
-                var closeCount = 0;
+
                 switch(this.array.length) {
                     case 1:
                          //if last string val of num1 any one below.. do nothing
@@ -202,16 +300,21 @@ var calculator = function(callback) {
                                 }
                         for(var o = 0; o<this.num1.length; o++){
                             if (this.num1[o] === '('){
-                                openCount+=1;
+                                this.openCount+=1;
                             }
                             if (this.num1[o] === ')'){
-                                closeCount+=1;
+                                this.closeCount+=1;
                             }
                         }
-                        if(openCount>closeCount){
+
+                        if(this.openCount>this.closeCount){
                             this.num1 = this.num1 + value;
                             this.array[0] = this.num1;
                             this.callback(this.num1);
+                            this.openCount = 0;
+                            this.closeCount = 0;
+
+
                             return;
                         }
 
@@ -285,20 +388,34 @@ var calculator = function(callback) {
     };
 }; //calc prototype end
 
+var calculation = function(num1, operator, num2){
+    this.value = operator.calculate(num1, num2);
+    this.history = operator.history(num1, num2);
+};
 
+var equalSign = function(){
+    this.calculate = function(array){
+        var calculationItem =  new calculation(array[0], array[1], array[2]);
+        return calculationItem;
+    };
+};
+
+//TODO number object
 
 var plus = function(){
+    this.priority = false;
     this.calculate = function(num1, num2){
         var sum = num1 + num2;
         return sum;
     };
-    this.history = function(){
+    this.history = function(num1, num2){
         var hist = num1 + ' + ' + num2 + ' = ' + this.calculate(num1, num2);
         return hist;
     };
 };
 
 var minus = function(){
+    this.priority = false;
     this.calculate = function(num1, num2){
         var difference = num1 - num2;
         return difference;
@@ -310,6 +427,8 @@ var minus = function(){
 };
 
 var multiply = function (){
+
+    this.priority = true;
     this.calculate = function(num1, num2){
         var product = num1 * num2;
         return product;
@@ -320,6 +439,7 @@ var multiply = function (){
 };
 
 var divide = function(){
+    this.priority = true;
     this.calculate = function(num1, num2){
         var quotient = num1 / num;
     };
@@ -328,9 +448,4 @@ var divide = function(){
     };
 };
 //
-var equalSign = function(){
-    this.calculate = function(arr, calc){
-      //TODO finish this
-    };
-};
 
