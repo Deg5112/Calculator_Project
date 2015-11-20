@@ -27,8 +27,9 @@ var calculator = function(callback) {
         var operator;
         var opCount;
         var result = string.substring( string.lastIndexOf('(')+1, string.indexOf(')')) ;
+        console.log(result)
         var newArray = result.split('');
-        var numOfPerenths;
+        var numOfPerenths = 0;
 
         for(var i = 0; i<newArray.length;i++){ //for every item in num1..
 
@@ -75,13 +76,13 @@ var calculator = function(callback) {
             for (var b = 0; b < newArray.length; b++) {
 
                 if (!(newArray[b] instanceof calculation ) && (typeof newArray[b] === 'object') && !(newArray[b].priority)) { //if no 'x' or '/' it's a minus or plus
-                    console.log('hello');
+
                     //loop 1
                     for (var l = b + 1; l < newArray.length; l++) {
                         if ( !(isNaN(parseFloat(newArray[l]))) ) {
 
                             num2 += newArray[l];
-                            //console.log('num2 :' + num2);
+
                         } else {
                             nextIndexToStart = l;   //keep looping to the right until value is not a number
                             break; //if operator set next index
@@ -100,7 +101,7 @@ var calculator = function(callback) {
                         }
                     }
                     //still in if statement
-                    console.log('num1: ' + num1, 'num2 :' + num2);
+
                     var calculationObject = new calculation(parseFloat(num1), newArray[b], parseFloat(num2)); //after we have num1 and two, make calc object
                     num1 = '';
                     num2 = '';
@@ -115,13 +116,22 @@ var calculator = function(callback) {
                 }
             }
         }
-        console.log('string between innermost ( ): ' + result );
-        console.log('initial string' + string);
+
         console.log('last Calc object : ', newArray);
         var replacingChunk = string.substring( string.lastIndexOf('('), string.indexOf(')')+1) ;
         var objVal = newArray[0].value;
         var newString = string.replace(replacingChunk, objVal);
         console.log(newString);
+        for(var t = 0; t<newString.length; t++){
+            if ( (newString[t]==='(')|| (newString[t]===')') ){
+                numOfPerenths += 1;
+            }
+        }
+        if(numOfPerenths < 1){
+            console.log(newString);
+        }else{
+            this.calculateParenths(newString); //if there's more parentheses,, run the function again, until we have something like 5*55 or 555+34
+        }
         return;
 
 
