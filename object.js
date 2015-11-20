@@ -28,12 +28,15 @@ var calculator = function(callback) {
         var opCount;
         var result = string.substring( string.lastIndexOf('(')+1, string.indexOf(')')) ;
         var newArray = result.split('');
-        console.log(newArray);
-        for(var i = 0; i<newArray.length;i++){
+        var numOfPerenths;
+
+        for(var i = 0; i<newArray.length;i++){ //for every item in num1..
 
             if( (newArray[i]==='-')||(newArray[i]==='+')||(newArray[i]==='x')||(newArray[i]==='/') ){ //if operator
+
                 newArray[i] = self.createItem( newArray[i] ); //create operator object
-                    if(newArray[i].priority){//if the value is an operate and has priority true
+
+                    if(newArray[i].priority){//if the value is an operate and has priority true, find num1 and num2
                         //get num 2 right of op
                         for(var x = i + 1; x<newArray.length;x++){
 
@@ -45,7 +48,6 @@ var calculator = function(callback) {
                             }
 
                         }
-
                         //get num 1 left of op
                         for(var y = i - 1; y>=0;y--){
                             console.log('y : ' + y);
@@ -55,41 +57,73 @@ var calculator = function(callback) {
                                 break;
                             }
                         }
-                        console.log(num1, num2);
-                        return;
-                        //TODO functionality for finding num1 and num2 and if first operator is high priority.. finish this and also do the scenario if first op is not high priority
+                        var calculationObject = new calculation(parseFloat(num1), newArray[i], parseFloat(num2));
+                        console.log(calculationObject);
+                        console.log(calculationObject.value);
+                        console.log(calculationObject.history);
+                        //TODO functionality, after the calculation item is made.. recreate the string and start over.. finish this and also do the scenario if first op is not high priority
 
-                        //while(typeof parseFloat(newArray[x]) === 'number'){
-                        //    console.log('hello again');
-                        //    num2 += newArray[x];
-                        //    x++;
-                        //}
-                        //console.log(num1);
-                        //while(typeof parseFloat(newArray[y]) === 'number'){
-                        //    num1 = newArray[y] + num1;
-                        //    y--;
-                        //}
-                        //console.log(num2);
                     }
             }
-
-
         }
-        //if we complete our loop and don't run into any high priority operators.. run the first one.
-        //for(var n = 0; n<newArray.length;n++){
-        //    if( (newArray[n] instanceof 'plus') (newArray[n] instanceof 'minus') ) {
-        //        var x = i + 1; //we'll start at the next index over
-        //        //var y = i-1;
-        //        for(x; x<newArray.length;x++){
-        //            if(typeof parseFloat(newArray[x]) === 'number'){
-        //                console.log('hello again');
-        //                num2 += newArray[x];
-        //                x++;
-        //            }
-        //            console.log(num2);
-        //        }
-        //    }
-        //}
+        console.log(newArray);
+
+        var nextIndexToStart;
+        var nextArray = [];
+        while(newArray.length>1) {
+            //if no 'x' or '/' start back over and trigger the first operator that you made above
+            for (var b = 0; b < newArray.length; b++) {
+
+                if (!(newArray[b] instanceof calculation ) && (typeof newArray[b] === 'object') && !(newArray[b].priority)) { //if no 'x' or '/' it's a minus or plus
+                    console.log('hello');
+                    //loop 1
+                    for (var l = b + 1; l < newArray.length; l++) {
+                        if ( !(isNaN(parseFloat(newArray[l]))) ) {
+
+                            num2 += newArray[l];
+                            //console.log('num2 :' + num2);
+                        } else {
+                            nextIndexToStart = l;   //keep looping to the right until value is not a number
+                            break; //if operator set next index
+                        }
+                    }
+                    //loop 2
+                    for (var v = b - 1; v >= 0; v--) {
+                        if (!(isNaN(parseFloat(newArray[v])))) {
+                            num1 = newArray[v] + num1;
+                            //console.log('num1 :' + num1); //keep looping to the left until value is not a number
+                        }else if(newArray[v] instanceof calculation){
+                                num1 = newArray[v].value;
+                            break;
+                        } else {
+                            break;
+                        }
+                    }
+                    //still in if statement
+                    console.log('num1: ' + num1, 'num2 :' + num2);
+                    var calculationObject = new calculation(parseFloat(num1), newArray[b], parseFloat(num2)); //after we have num1 and two, make calc object
+                    num1 = '';
+                    num2 = '';
+                    for (var n = nextIndexToStart; n < newArray.length; n++) {
+                        nextArray.push(newArray[n]);
+                    }
+                    nextArray.unshift(calculationObject);  //make a new array with the new calc object and the following values, reset num1 & num2 and the temp nextArray
+                    newArray = nextArray;
+                    nextArray = [];
+                    console.log(newArray); //when while loop is done.. we are left with a calculation object inside the parenths.. replace original parenths with calc object
+
+                }
+            }
+        }
+        console.log('string between innermost ( ): ' + result );
+        console.log('initial string' + string);
+        console.log('last Calc object : ', newArray);
+        var replacingChunk = string.substring( string.lastIndexOf('('), string.indexOf(')')+1) ;
+        var objVal = newArray[0].value;
+        var newString = string.replace(replacingChunk, objVal);
+        console.log(newString);
+        return;
+
 
         //finalArray.push(num1, operator, num2);
         //console.log(finalArray);
@@ -377,6 +411,9 @@ var calculator = function(callback) {
             case 'x':
                 curVal = new multiply();
                 break;
+            case '*':
+                curVal = new multiply();
+                break;
             case '/':
                 curVal = new divide();
                 break;
@@ -391,6 +428,7 @@ var calculator = function(callback) {
 var calculation = function(num1, operator, num2){
     this.value = operator.calculate(num1, num2);
     this.history = operator.history(num1, num2);
+    this.historyArray = [num1, operator, num2];
 };
 
 var equalSign = function(){
@@ -421,7 +459,7 @@ var minus = function(){
         return difference;
     };
     this.history = function(num1, num2){
-        var hist = num + ' - ' + num2 + ' = ' + this.calculate(num, num2);
+        var hist = num1 + ' - ' + num2 + ' = ' + this.calculate(num1, num2);
         return hist;
     };
 };
@@ -434,17 +472,20 @@ var multiply = function (){
         return product;
     };
     this.history = function(num1, num2) {
-        var hist = num1 + ' x ' + num2 + ' = ' + this.calculate(num, num2);
+        var hist = num1 + ' x ' + num2 + ' = ' + this.calculate(num1, num2);
+        return hist;
     };
 };
 
 var divide = function(){
     this.priority = true;
     this.calculate = function(num1, num2){
-        var quotient = num1 / num;
+        var quotient = num1 / num1;
+        return quotient;
     };
     this.history = function(num1, num2){
-        var hist = num1 + ' / ' + num2 + ' = ' + this.calculate(num, num2);
+        var hist = num1 + ' / ' + num2 + ' = ' + this.calculate(num1, num2);
+        return hist;
     };
 };
 //
