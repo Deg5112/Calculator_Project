@@ -122,21 +122,22 @@ var calculator = function(callback) {
         var objVal = newArray[0].value;
         var newString = string.replace(replacingChunk, objVal);
         console.log(newString);
-        for(var t = 0; t<newString.length; t++){
-            if ( (newString[t]==='(')|| (newString[t]===')') ){
-                numOfPerenths += 1;
-            }
-        }
-        if(numOfPerenths < 1){
-            console.log(newString);
-        }else{
-            this.calculateParenths(newString); //if there's more parentheses,, run the function again, until we have something like 5*55 or 555+34
-        }
-        return;
-
-
-        //finalArray.push(num1, operator, num2);
-        //console.log(finalArray);
+        //it broke here be carefull
+        //for(var t = 0; t<newString.length; t++){
+        //    if ( (newString[t]==='(')|| (newString[t]===')') ){
+        //        numOfPerenths += 1;
+        //    }
+        //}
+        //if(numOfPerenths < 1){
+        //    console.log(newString);
+        //}else{
+        //    this.calculateParenths(newString); //if there's more parentheses,, run the function again, until we have something like 5*55 or 555+34
+        //}
+        //return;
+        //
+        //
+        ////finalArray.push(num1, operator, num2);
+        ////console.log(finalArray);
     };
 
     //method that either updates the display, and the model, and desi
