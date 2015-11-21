@@ -33,7 +33,7 @@ var calculator = function(callback) {
 
         for(var i = 0; i<newArray.length;i++){ //for every item in num1..
 
-            if( (newArray[i]==='-')||(newArray[i]==='+')||(newArray[i]==='x')||(newArray[i]==='/') ){ //if operator
+            if( (newArray[i]==='-')||(newArray[i]==='+')||(newArray[i]==='x')||(newArray[i]==='/')||(newArray[i]==='*') ){ //if operator
 
                 newArray[i] = self.createItem( newArray[i] ); //create operator object
 
@@ -47,7 +47,6 @@ var calculator = function(callback) {
                             }else{
                                 break;
                             }
-
                         }
                         //get num 1 left of op
                         for(var y = i - 1; y>=0;y--){
@@ -69,9 +68,10 @@ var calculator = function(callback) {
         }
         console.log(newArray);
 
-        var nextIndexToStart;
+        var nextIndexToStart; //this is for when we build the new array after the first collapse
         var nextArray = [];
         while(newArray.length>1) {
+
             //if no 'x' or '/' start back over and trigger the first operator that you made above
             for (var b = 0; b < newArray.length; b++) {
 
@@ -114,30 +114,62 @@ var calculator = function(callback) {
                     console.log(newArray); //when while loop is done.. we are left with a calculation object inside the parenths.. replace original parenths with calc object
 
                 }
+                else if( !(newArray[b] instanceof calculation ) && (typeof newArray[b] === 'object') && (newArray[b].priority) ){
+                    //TODO inner parenths for multiply
+                    for(var k = i + 1; k<newArray.length;k++){
+
+                        if( !(isNaN(parseFloat(newArray[k]))) ){ //starting one index to the right of operator
+
+                            num2 += newArray[k];
+                        }else{
+                            break;
+                        }
+                    }
+                    //get num 1 left of op
+                    for(var r = r - 1; r>=0;r--){
+
+                        if(!(isNaN(parseFloat(newArray[r])))){ //starting one index to the right of operator
+                            num1 = newArray[r] + num1;
+                        }else{
+                            break;
+                        }
+                    }
+                    console.log('num1 : ' + num1, 'num2 : ' + num2, 'operator : ' + newArray[b]);
+                    var calculationObject = new calculation(parseFloat(num1), newArray[b], parseFloat(num2));
+                    num1 = '';
+                    num2 = '';
+                    for (var n = nextIndexToStart; n < newArray.length; n++) {
+                        nextArray.push(newArray[n]);
+                    }
+                    nextArray.unshift(calculationObject);  //make a new array with the new calc object and the following values, reset num1 & num2 and the temp nextArray
+                    newArray = nextArray;
+                    nextArray = [];
+                    console.log(newArray); //when while loop is done.. we are left with a calculation object inside the parenths.. replace original parenths with calc object
+//TODO stopped right here! still collapsing but multiplies after addition/subtraction in parenths..
+
+                    return;
+                }
             }
         }
 
-        console.log('last Calc object : ', newArray);
         var replacingChunk = string.substring( string.lastIndexOf('('), string.indexOf(')')+1) ;
         var objVal = newArray[0].value;
         var newString = string.replace(replacingChunk, objVal);
         console.log(newString);
         //it broke here be carefull
-        //for(var t = 0; t<newString.length; t++){
-        //    if ( (newString[t]==='(')|| (newString[t]===')') ){
-        //        numOfPerenths += 1;
-        //    }
-        //}
-        //if(numOfPerenths < 1){
-        //    console.log(newString);
-        //}else{
-        //    this.calculateParenths(newString); //if there's more parentheses,, run the function again, until we have something like 5*55 or 555+34
-        //}
-        //return;
-        //
-        //
-        ////finalArray.push(num1, operator, num2);
-        ////console.log(finalArray);
+        for(var t = 0; t<newString.length; t++){
+            if ( (newString[t]==='(')|| (newString[t]===')') ){
+                numOfPerenths += 1;
+            }
+        }
+        if(numOfPerenths < 1){
+            console.log(newString);
+            return;
+        }else{
+            this.calculateParenths(newString); //if there's more parentheses,, run the function again, until we have something like 5*55 or 555+34
+        }
+        return;
+
     };
 
     //method that either updates the display, and the model, and desi
