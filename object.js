@@ -20,157 +20,157 @@ var calculator = function(callback) {
         var operator;
         string.indexOf(')');
         string.lastIndexOf('(');
-        var newArr;
+        var tempArray = [];
         var num1 = '';
         var num2 = '';
         finalArray = [];
         var operator;
-        var opCount;
+        var highOpCount = 0;
+        var lowOpCount = 0;
         var result = string.substring( string.lastIndexOf('(')+1, string.indexOf(')')) ;
-        console.log(result)
+        console.log(result);
         var newArray = result.split('');
         var numOfPerenths = 0;
+        var nextIndex = null;
+        console.log(newArray);
 
-        for(var i = 0; i<newArray.length;i++){ //for every item in num1..
+        for(var i = 0; i<newArray.length;i++){ //for each item in the inner parenths
 
             if( (newArray[i]==='-')||(newArray[i]==='+')||(newArray[i]==='x')||(newArray[i]==='/')||(newArray[i]==='*') ){ //if operator
 
+                if( (newArray[i]==='x')||(newArray[i]==='/')||(newArray[i]==='*') ){
+                    console.log('true');
+                    highOpCount += 1;
+                }
+                else if((newArray[i]==='-')||(newArray[i]==='+') ){
+                    console.log('true');
+                    lowOpCount+=1;
+                }
                 newArray[i] = self.createItem( newArray[i] ); //create operator object
+            }
+        }
 
-                    if(newArray[i].priority){//if the value is an operate and has priority true, find num1 and num2
-                        //get num 2 right of op
-                        for(var x = i + 1; x<newArray.length;x++){
+        console.log('number of high operators in array  ' + highOpCount,'number of low operators in array ' + lowOpCount );
+        //after we convert all the operators strings into objects.. loop through again and find if any are high priority
+
+        while(highOpCount>=1){
+                for(var n = 0; n < newArray.length; n++){
+                    console.log(newArray);
+                    if(newArray[n].priority){//if the value is an operate and has priority true, find num1 and num2
+
+                        // loop 1 get num 2 right of op
+
+                        for(var x = n + 1; x<newArray.length;x++){
 
                             if( !(isNaN(parseFloat(newArray[x]))) ){ //starting one index to the right of operator
 
-                                    num2 += newArray[x];
+                                num2 += newArray[x];
                             }else{
+                                nextIndex = x; //index to concat after init calculation
+
                                 break;
                             }
                         }
-                        //get num 1 left of op
-                        for(var y = i - 1; y>=0;y--){
-                            console.log('y : ' + y);
+                        // loop 2   get num 1 left of op
+                        for(var y = n - 1; y>=0;y--){
                             if(!(isNaN(parseFloat(newArray[y])))){ //starting one index to the right of operator
                                 num1 = newArray[y] + num1;
                             }else{
                                 break;
                             }
                         }
-                        var calculationObject = new calculation(parseFloat(num1), newArray[i], parseFloat(num2));
-                        console.log(calculationObject);
-                        console.log(calculationObject.value);
-                        console.log(calculationObject.history);
-                        //TODO functionality, after the calculation item is made.. recreate the string and start over.. finish this and also do the scenario if first op is not high priority
+                        console.log('num1 ' + num1, 'num2 ' + num2);
 
+                        var calcVal = newArray[n].calculate( parseInt(num1), parseInt(num2) ); //find calc val
+                        console.log('calcVal' + calcVal);
+                        highOpCount-=1;
+                        if(highOpCount===0){  //if no more operators.. the current calc val is the last item, so we just make an array with just that..
+                            newArray = [];
+                            newArray.push(calcVal);
+                            console.log(newArray);
+                            num1 = '';
+                            num2 = '';
+                            return;
+                        }else{
+                            console.log('number of high operators left array  ' + highOpCount);
+                            tempArray.push(calcVal);
+                            for(var k = nextIndex; k<newArray.length;k++){  //make new array with calc value and the rest..
+                                tempArray.push(newArray[k]);
+                            }
+                            newArray = tempArray;
+                            tempArray = [];
+                            console.log(newArray);
+                            num1 = '';
+                            num2 = '';
+                        }
                     }
-            }
+                }
         }
         console.log(newArray);
-
-        var nextIndexToStart; //this is for when we build the new array after the first collapse
-        var nextArray = [];
-        while(newArray.length>1) {
-
-            //if no 'x' or '/' start back over and trigger the first operator that you made above
-            for (var b = 0; b < newArray.length; b++) {
-
-                if (!(newArray[b] instanceof calculation ) && (typeof newArray[b] === 'object') && !(newArray[b].priority)) { //if no 'x' or '/' it's a minus or plus
-
-                    //loop 1
-                    for (var l = b + 1; l < newArray.length; l++) {
-                        if ( !(isNaN(parseFloat(newArray[l]))) ) {
-
-                            num2 += newArray[l];
-
-                        } else {
-                            nextIndexToStart = l;   //keep looping to the right until value is not a number
-                            break; //if operator set next index
-                        }
-                    }
-                    //loop 2
-                    for (var v = b - 1; v >= 0; v--) {
-                        if (!(isNaN(parseFloat(newArray[v])))) {
-                            num1 = newArray[v] + num1;
-                            //console.log('num1 :' + num1); //keep looping to the left until value is not a number
-                        }else if(newArray[v] instanceof calculation){
-                                num1 = newArray[v].value;
-                            break;
-                        } else {
-                            break;
-                        }
-                    }
-                    //still in if statement
-
-                    var calculationObject = new calculation(parseFloat(num1), newArray[b], parseFloat(num2)); //after we have num1 and two, make calc object
-                    num1 = '';
-                    num2 = '';
-                    for (var n = nextIndexToStart; n < newArray.length; n++) {
-                        nextArray.push(newArray[n]);
-                    }
-                    nextArray.unshift(calculationObject);  //make a new array with the new calc object and the following values, reset num1 & num2 and the temp nextArray
-                    newArray = nextArray;
-                    nextArray = [];
-                    console.log(newArray); //when while loop is done.. we are left with a calculation object inside the parenths.. replace original parenths with calc object
-
-                }
-                else if( !(newArray[b] instanceof calculation ) && (typeof newArray[b] === 'object') && (newArray[b].priority) ){
-                    //TODO inner parenths for multiply
-                    for(var k = i + 1; k<newArray.length;k++){
-
-                        if( !(isNaN(parseFloat(newArray[k]))) ){ //starting one index to the right of operator
-
-                            num2 += newArray[k];
-                        }else{
-                            break;
-                        }
-                    }
-                    //get num 1 left of op
-                    for(var r = r - 1; r>=0;r--){
-
-                        if(!(isNaN(parseFloat(newArray[r])))){ //starting one index to the right of operator
-                            num1 = newArray[r] + num1;
-                        }else{
-                            break;
-                        }
-                    }
-                    console.log('num1 : ' + num1, 'num2 : ' + num2, 'operator : ' + newArray[b]);
-                    var calculationObject = new calculation(parseFloat(num1), newArray[b], parseFloat(num2));
-                    num1 = '';
-                    num2 = '';
-                    for (var n = nextIndexToStart; n < newArray.length; n++) {
-                        nextArray.push(newArray[n]);
-                    }
-                    nextArray.unshift(calculationObject);  //make a new array with the new calc object and the following values, reset num1 & num2 and the temp nextArray
-                    newArray = nextArray;
-                    nextArray = [];
-                    console.log(newArray); //when while loop is done.. we are left with a calculation object inside the parenths.. replace original parenths with calc object
-//TODO stopped right here! still collapsing but multiplies after addition/subtraction in parenths..
-
-                    return;
-                }
-            }
-        }
-
-        var replacingChunk = string.substring( string.lastIndexOf('('), string.indexOf(')')+1) ;
-        var objVal = newArray[0].value;
-        var newString = string.replace(replacingChunk, objVal);
-        console.log(newString);
-        //it broke here be carefull
-        for(var t = 0; t<newString.length; t++){
-            if ( (newString[t]==='(')|| (newString[t]===')') ){
-                numOfPerenths += 1;
-            }
-        }
-        if(numOfPerenths < 1){
-            console.log(newString);
-            return;
-        }else{
-            this.calculateParenths(newString); //if there's more parentheses,, run the function again, until we have something like 5*55 or 555+34
-        }
         return;
 
+
+
+
+
+        //if no 'x' or '/' start back over and trigger the first operator that you made above
+        for (var b = 0; b < newArray.length; b++) {
+
+            if (!(newArray[b] instanceof calculation ) && (typeof newArray[b] === 'object') && !(newArray[b].priority)) { //if no 'x' or '/' it's a minus or plus
+
+                //loop 1
+                for (var l = b + 1; l < newArray.length; l++) {
+                    if ( !(isNaN(parseFloat(newArray[l]))) ) {
+
+                        num2 += newArray[l];
+
+                    } else {
+                        nextIndexToStart = l;   //keep looping to the right until value is not a number
+                        break; //if operator set next index
+                    }
+                }
+                //loop 2
+                for (var v = b - 1; v >= 0; v--) {
+                    if (!(isNaN(parseFloat(newArray[v])))) {
+                        num1 = newArray[v] + num1;
+                        //console.log('num1 :' + num1); //keep looping to the left until value is not a number
+                    }else if(newArray[v] instanceof calculation){
+                            num1 = newArray[v].value;
+                        break;
+                    } else {
+                        break;
+                    }
+                }
+                //still in if statement
+
+                var calculationObject = new calculation(parseFloat(num1), newArray[b], parseFloat(num2)); //after we have num1 and two, make calc object
+                num1 = '';
+                num2 = '';
+                //parenths.. replace original parenths with calc object
+
+            }
+
+        }
     };
+
+        //var replacingChunk = string.substring( string.lastIndexOf('('), string.indexOf(')')+1) ;
+        //var objVal = newArray[0].value;
+        //var newString = string.replace(replacingChunk, objVal);
+        //console.log(newString);
+        ////it broke here be carefull
+        //for(var t = 0; t<newString.length; t++){
+        //    if ( (newString[t]==='(')|| (newString[t]===')') ){
+        //        numOfPerenths += 1;
+        //    }
+        //}
+        //if(numOfPerenths < 1){
+        //    console.log(newString);
+        //    return;
+        //}else{
+        //    this.calculateParenths(newString); //if there's more parentheses,, run the function again, until we have something like 5*55 or 555+34
+        //}
+        //return;
+
 
     //method that either updates the display, and the model, and desi
     this.addItem = function (value) {
@@ -523,7 +523,7 @@ var multiply = function (){
 var divide = function(){
     this.priority = true;
     this.calculate = function(num1, num2){
-        var quotient = num1 / num1;
+        var quotient = num1 / num2;
         return quotient;
     };
     this.history = function(num1, num2){
