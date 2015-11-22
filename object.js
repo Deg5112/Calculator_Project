@@ -96,22 +96,22 @@ var calculator = function(callback) {
                         if(highOpCount===0 && lowOpCount === 0){  //if no more operators.. the current calc val is the last item, so we just make an array with just that..
                             newArray = [];
                             newArray.push(calcVal);
-                            console.log(newArray);
+
                             num1 = '';
                             num2 = '';
 
                         }else{//if there's still low ops but no high ops
 
-                            console.log('number of high operators left array  ' + highOpCount, 'num of low ops left ' + lowOpCount);
+
                             if( (newArray[0]===num1[0] && nextIndexToLeft === null ) ){ //if calc val is the first most poss option
-                                console.log('first');
+
                                 tempArray.push(calcVal);
                                 for(var k = nextIndexToRight; k<newArray.length;k++){  //make new array with calc value and the reset..
                                     tempArray.push(newArray[k]);
                                 }
 
                             }else if(newArray[newArray.length-1]===num2[num2.length-1]){ //if it's the last poss option
-                                console.log('second');
+
                                 for(var j = 0; j<nextIndexToLeft+1;j++){  //make new array with calc value and the reset..
                                     tempArray.push(newArray[j]);
                                 }
@@ -119,12 +119,11 @@ var calculator = function(callback) {
 
                             }
                             else{ //if calculation is in middle of array
-                                console.log('third');
+
                                 for(var g = 0; g<=nextIndexToLeft; g++){
                                     tempArray.push(newArray[g]);
                                 }
                                 tempArray.push(calcVal);
-                                console.log('next Index to right' + nextIndexToRight);
                                 for(var f = nextIndexToRight; f < newArray.length; f++){
                                     tempArray.push(newArray[f]);
                                 }
@@ -135,7 +134,7 @@ var calculator = function(callback) {
                             tempArray = [];
                             num1 = '';
                             num2 = '';
-                            console.log(newArray);
+
 
 
                         }
@@ -143,7 +142,7 @@ var calculator = function(callback) {
                 }
         }
 
-        console.log(newArray);
+
         while(lowOpCount>=1){
             for(var h = 0; h<newArray.length;h++){
 
@@ -169,29 +168,28 @@ var calculator = function(callback) {
                         }
                     }
                     console.log('num1 ' + num1, 'num2 ' + num2);
-                    var calcVal = newArray[h].calculate( parseInt(num1), parseInt(num2) ); //find calc val
-                    console.log('calcVal' + calcVal);
+                    var newCalcVal = newArray[h].calculate( parseInt(num1), parseInt(num2) ); //find calc val
+
                     lowOpCount -= 1;
-                    console.log('number of high operators left array  ' + highOpCount);
+
                     if(highOpCount===0 && lowOpCount === 0) {  //if no more operators.. the current calc val is the last item, so we just make an array with just that..
                         newArray = [];
-                        newArray.push(calcVal);
+                        newArray.push(newCalcVal);
                         console.log(newArray);
                         num1 = '';
                         num2 = '';
 
                     }else{ //if one or more low priority operators left..
                         console.log('first');
-                        tempArray.push(calcVal);
+                        tempArray.push(newCalcVal);
                         for(var u = nextIndexToRight; u<newArray.length;u++){  //make new array with calc value and the reset..
                             tempArray.push(newArray[u]);
                         }
                         newArray = tempArray;
                         tempArray = [];
-                        console.log(newArray);
+
                         num1 = '';
                         num2 = '';
-                        console.log(newArray);
 
                     }
                 }
@@ -246,6 +244,7 @@ var calculator = function(callback) {
         }else{
             self.calculateParenths(newString);
         }
+
     };
 
 
@@ -337,11 +336,6 @@ var calculator = function(callback) {
                                         }
                                     }
                                 }
-
-
-
-
-
 
                                 //if we hit an operator + - * value.. if theres a '(' in num1, and last letter is not '(' or ')' or 'operator'
                                 if(this.num1[this.num1.length-1] === '('){
@@ -435,6 +429,7 @@ var calculator = function(callback) {
 
                     case 1:  //if last string val of num1 is any of below.. do nothing,
                         if( (this.num1[this.num1.length-1] === '(') ||
+                            (this.num1[this.num1.length-1] === ')') ||
                             (this.num1[this.num1.length  - 1] === '+') ||
                             (this.num1[this.num1.length  - 1] === '-') ||
                             (this.num1[this.num1.length  - 1] === '/') ||
@@ -448,6 +443,8 @@ var calculator = function(callback) {
                         this.array[0] = this.num1;
                         this.callback(this.num1);
                         break;
+
+
 
                     case 3:
                         for(var y = 0; y<this.num2.length; y++){ //if cur index has a ')' do nothing,
