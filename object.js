@@ -33,7 +33,7 @@ var calculator = function(callback) {
         var numOfPerenths = 0;
         var nextIndexToRight = null;
         var nextIndexToLeft = null;
-        console.log(newArray);
+
 
         for(var i = 0; i<newArray.length;i++){ //for each item in the inner parenths
 
@@ -51,12 +51,12 @@ var calculator = function(callback) {
             }
         }
 
-        console.log('number of high operators in array  ' + highOpCount,'number of low operators in array ' + lowOpCount );
+
         //after we convert all the operators strings into objects.. loop through again and find if any are high priority
 
         while(highOpCount>=1){
                 for(var n = 0; n < newArray.length; n++){
-                    console.log(newArray);
+
                     if(newArray[n].priority){//if the value is an operate and has priority true, find num1 and num2
 
                         // loop 1 get num 2 right of op
@@ -81,12 +81,12 @@ var calculator = function(callback) {
                                 break;
                             }
                         }
-                        console.log('num1 ' + num1, 'num2 ' + num2);
+
 
                         var calcVal = newArray[n].calculate( parseInt(num1), parseInt(num2) ); //find calc val
-                        console.log('calcVal' + calcVal);
+
                         highOpCount-=1;
-                        console.log('number of high operators left array  ' + highOpCount);
+
                         if(highOpCount===0 && lowOpCount === 0){  //if no more operators.. the current calc val is the last item, so we just make an array with just that..
                             newArray = [];
                             newArray.push(calcVal);
@@ -97,7 +97,7 @@ var calculator = function(callback) {
                         }else{//if there's still low ops but no high ops
 
                             console.log('number of high operators left array  ' + highOpCount, 'num of low ops left ' + lowOpCount);
-                            if(newArray[0]===num1[0]){ //if calc val is the first most poss option
+                            if( (newArray[0]===num1[0] && nextIndexToLeft === null ) ){ //if calc val is the first most poss option
                                 console.log('first');
                                 tempArray.push(calcVal);
                                 for(var k = nextIndexToRight; k<newArray.length;k++){  //make new array with calc value and the reset..
@@ -129,6 +129,7 @@ var calculator = function(callback) {
                             tempArray = [];
                             num1 = '';
                             num2 = '';
+                            console.log(newArray);
 
 
                         }
@@ -196,16 +197,19 @@ var calculator = function(callback) {
         var newString = string.replace(replacingChunk, objVal);
         console.log(newString);
 
-        //it broke here be carefull
+        //check for parenths in new string
         for(var z = 0; z<newString.length; z++){
             if ( (newString[z]==='(')|| (newString[z]===')') ){
                 numOfPerenths += 1;
             }
         }
-        if(numOfPerenths===0){ //if there's no parenths in string..
+        //if there's no parenths in string..
+        if(numOfPerenths===0){
+
             finalArray = newString.split(''); //make and array.. grab num1 and num2.. run calculation method on operator
             console.log(finalArray);
             for(var c = 0; c<finalArray.length; c++){
+
                 if( (finalArray[c]==='-')||(finalArray[c]==='+')||(finalArray[c]==='x')||(finalArray[c]==='/')||(finalArray[c]==='*') ){
                     finalArray[c] = self.createItem( finalArray[c] ); //create operator object
 
@@ -219,9 +223,8 @@ var calculator = function(callback) {
                     console.log('num2 ' + ' ' + num2);
 
                     // loop 2   get num 1 left of op
-                    for(var e = c; e >= -5;e--){
+                    for(var e = c-1; e >= 0;e--){
                         console.log('hello');
-                        console.log(console.log('c' + ' ' + c));
                         if(!(isNaN(parseFloat(finalArray[e])))){ //starting one index to the right of operator
                             num1 = finalArray[e] + num1;
                         }
@@ -231,14 +234,10 @@ var calculator = function(callback) {
                     console.log(newcalcVal);
                     self.array[0] = newcalcVal;
                     console.log(self.array);
-                    return;
+
                 }
             }
-            return;
         }
-
-
-
     };
 
 
