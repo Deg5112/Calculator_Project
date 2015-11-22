@@ -37,17 +37,23 @@ var calculator = function(callback) {
 
         for(var i = 0; i<newArray.length;i++){ //for each item in the inner parenths
 
-            if( (newArray[i]==='-')||(newArray[i]==='+')||(newArray[i]==='x')||(newArray[i]==='/')||(newArray[i]==='*') ){ //if operator
+            if( (newArray[i]==='+')||(newArray[i]==='x')||(newArray[i]==='/')||(newArray[i]==='*') ){ //if operator
 
                 if( (newArray[i]==='x')||(newArray[i]==='/')||(newArray[i]==='*') ){
 
                     highOpCount += 1;
                 }
-                else if((newArray[i]==='-')||(newArray[i]==='+') ){
+                else if( (newArray[i]==='+') ){
 
                     lowOpCount+=1;
                 }
                 newArray[i] = self.createItem( newArray[i] ); //create operator object
+            }
+            if( (newArray[i]==='-') ){
+                if( !(newArray[i-1] instanceof minus) ) {
+                    lowOpCount+=1;
+                    newArray[i] = self.createItem( newArray[i] ); //create operator object
+                }
             }
         }
 
@@ -63,8 +69,7 @@ var calculator = function(callback) {
 
                         for(var x = n + 1; x<newArray.length;x++){
 
-                            if( !(isNaN(parseFloat(newArray[x]))) ){ //starting one index to the right of operator
-
+                            if( (!(isNaN(parseFloat(newArray[x])))) || (newArray[x] === '-' ) ){ //starting one index to the right of operator
                                 num2 += newArray[x];
                             }else{
                                 nextIndexToRight = x; //index to concat after init calculation
@@ -74,7 +79,7 @@ var calculator = function(callback) {
                         }
                         // loop 2   get num 1 left of op
                         for(var y = n - 1; y>=0;y--){
-                            if(!(isNaN(parseFloat(newArray[y])))){ //starting one index to the right of operator
+                            if( (!(isNaN(parseFloat(newArray[y]))))|| (newArray[y]=== '-') ){ //starting one index to the right of operator
                                 num1 = newArray[y] + num1;
                             }else{
                                 nextIndexToLeft = y;
@@ -145,7 +150,7 @@ var calculator = function(callback) {
 
                     for(var d = h + 1; d<newArray.length;d++){
 
-                        if( !(isNaN(parseFloat(newArray[d]))) ){ //starting one index to the right of operator
+                        if( (!(isNaN(parseFloat(newArray[d])))) || (newArray[d] === '-')  ){ //starting one index to the right of operator
                             num2 += newArray[d];
                         }else{
                             nextIndexToRight = d; //index to concat after init calculation
@@ -155,7 +160,7 @@ var calculator = function(callback) {
                     }
                     // loop 2   get num 1 left of op
                     for(var t = h - 1; t>=0;t--){
-                        if(!(isNaN(parseFloat(newArray[t])))){ //starting one index to the right of operator
+                        if( (!(isNaN(parseFloat(newArray[t])))) || (newArray[t] === '-') ){ //starting one index to the right of operator
                             num1 = newArray[t] + num1;
                         }else{
                             nextIndexToLeft = t;
@@ -237,6 +242,8 @@ var calculator = function(callback) {
 
                 }
             }
+        }else{
+            self.calculateParenths(newString);
         }
     };
 
