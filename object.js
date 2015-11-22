@@ -103,14 +103,14 @@ var calculator = function(callback) {
                                 for(var k = nextIndexToRight; k<newArray.length;k++){  //make new array with calc value and the reset..
                                     tempArray.push(newArray[k]);
                                 }
+
                             }else if(newArray[newArray.length-1]===num2[num2.length-1]){ //if it's the last poss option
                                 console.log('second');
                                 for(var j = 0; j<nextIndexToLeft+1;j++){  //make new array with calc value and the reset..
                                     tempArray.push(newArray[j]);
                                 }
                                 tempArray.push(calcVal);
-                                console.log(tempArray);
-                                return;
+
                             }
                             else{ //if calculation is in middle of array
                                 console.log('third');
@@ -118,20 +118,78 @@ var calculator = function(callback) {
                                     tempArray.push(newArray[g]);
                                 }
                                 tempArray.push(calcVal);
-                                for(var f = 0; f < newArray.length; f++){
-                                    tempArray.push(newArray[i]);
+                                console.log('next Index to right' + nextIndexToRight);
+                                for(var f = nextIndexToRight; f < newArray.length; f++){
+                                    tempArray.push(newArray[f]);
                                 }
+
+
                             }
                             newArray = tempArray;
                             tempArray = [];
-                            console.log(newArray);
                             num1 = '';
                             num2 = '';
+
+
                         }
                     }
                 }
         }
+
         console.log(newArray);
+        while(lowOpCount>=1){
+            for(var h = 0; h<newArray.length;h++){
+
+                if( (typeof newArray[h] === 'object') && (!(newArray[h]).priority) ) {
+
+                    for(var d = h + 1; d<newArray.length;d++){
+
+                        if( !(isNaN(parseFloat(newArray[d]))) ){ //starting one index to the right of operator
+                            num2 += newArray[d];
+                        }else{
+                            nextIndexToRight = d; //index to concat after init calculation
+
+                            break;
+                        }
+                    }
+                    // loop 2   get num 1 left of op
+                    for(var t = h - 1; t>=0;t--){
+                        if(!(isNaN(parseFloat(newArray[t])))){ //starting one index to the right of operator
+                            num1 = newArray[t] + num1;
+                        }else{
+                            nextIndexToLeft = t;
+                            break;
+                        }
+                    }
+                    console.log('num1 ' + num1, 'num2 ' + num2);
+                    var calcVal = newArray[h].calculate( parseInt(num1), parseInt(num2) ); //find calc val
+                    console.log('calcVal' + calcVal);
+                    lowOpCount -= 1;
+                    console.log('number of high operators left array  ' + highOpCount);
+                    if(highOpCount===0 && lowOpCount === 0) {  //if no more operators.. the current calc val is the last item, so we just make an array with just that..
+                        newArray = [];
+                        newArray.push(calcVal);
+                        console.log(newArray);
+                        num1 = '';
+                        num2 = '';
+                        return;
+                    }else{ //if one or more low priority operators left..
+                        console.log('first');
+                        tempArray.push(calcVal);
+                        for(var u = nextIndexToRight; u<newArray.length;u++){  //make new array with calc value and the reset..
+                            tempArray.push(newArray[u]);
+                        }
+                        newArray = tempArray;
+                        tempArray = [];
+                        console.log(newArray);
+                        num1 = '';
+                        num2 = '';
+                        console.log(newArray);
+
+                    }
+                }
+            }
+        }
         return;
 
 
