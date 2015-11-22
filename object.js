@@ -8,6 +8,7 @@ var calculator = function(callback) {
     this.num1;
     this.num2;
     this.lastItem;
+    this.minusCount = 0;
     this.callback = callback;
     this.allClear = function () { //AC is hit and it clears display and empties array
         $('#display').val('');
@@ -317,6 +318,31 @@ var calculator = function(callback) {
                         //if it's an operator..
                     switch(this.array.length){
                             case 1:
+                                for(var u = 0; u<this.num1.length;u++){
+                                    console.log('hello');
+                                    if( (this.num1[u] === '(') && (this.num1[this.num1.length-1] === '-') ){
+                                        console.log('hello again');
+                                        for(var p = 0; p<this.num1.length;p++){
+                                            if(this.num1[p]==='-'){
+                                                console.log('hello there yea');
+                                                this.minusCount += 1;
+                                            }
+                                        }
+                                        console.log(this.minusCount);
+                                        if(this.minusCount === 1){
+                                            console.log('what up');
+                                            this.num1 = this.num1 + value;  //then concat then return
+                                            this.callback(this.num1);
+                                            return;
+                                        }
+                                    }
+                                }
+
+
+
+
+
+
                                 //if we hit an operator + - * value.. if theres a '(' in num1, and last letter is not '(' or ')' or 'operator'
                                 if(this.num1[this.num1.length-1] === '('){
                                     return;
@@ -334,6 +360,7 @@ var calculator = function(callback) {
                                         //only concatonate if above is true
                                         this.num1 = this.num1 + value;  //then concat then return
                                         this.callback(this.num1);
+                                        this.array[0] = this.num1;
                                         return;
                                     }
 
@@ -367,7 +394,7 @@ var calculator = function(callback) {
                                         (this.num1[this.num1.length-1] === '/')
                                     )
                                     {
-                                        var newString = this.num1.slice(0, this.num1.length-1);
+                                        var newString = this.num1.slice(0, this.num1.length-1); //replacing + with - or x with / a
                                         newString += value;
                                         this.num1 = newString;
                                         this.array[0] = this.num1;
