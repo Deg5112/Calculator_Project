@@ -23,7 +23,7 @@ var calculator = function(callback) {
         var tempArray = [];
         var num1 = '';
         var num2 = '';
-        finalArray = [];
+        var finalArray;
         var operator;
         var highOpCount = 0;
         var lowOpCount = 0;
@@ -93,7 +93,7 @@ var calculator = function(callback) {
                             console.log(newArray);
                             num1 = '';
                             num2 = '';
-                            return;
+
                         }else{//if there's still low ops but no high ops
 
                             console.log('number of high operators left array  ' + highOpCount, 'num of low ops left ' + lowOpCount);
@@ -172,7 +172,7 @@ var calculator = function(callback) {
                         console.log(newArray);
                         num1 = '';
                         num2 = '';
-                        return;
+
                     }else{ //if one or more low priority operators left..
                         console.log('first');
                         tempArray.push(calcVal);
@@ -190,69 +190,58 @@ var calculator = function(callback) {
                 }
             }
         }
-        return;
 
+        var replacingChunk = string.substring( string.lastIndexOf('('), string.indexOf(')')+1) ;
+        var objVal = newArray[0];
+        var newString = string.replace(replacingChunk, objVal);
+        console.log(newString);
 
-
-
-
-        //if no 'x' or '/' start back over and trigger the first operator that you made above
-        for (var b = 0; b < newArray.length; b++) {
-
-            if (!(newArray[b] instanceof calculation ) && (typeof newArray[b] === 'object') && !(newArray[b].priority)) { //if no 'x' or '/' it's a minus or plus
-
-                //loop 1
-                for (var l = b + 1; l < newArray.length; l++) {
-                    if ( !(isNaN(parseFloat(newArray[l]))) ) {
-
-                        num2 += newArray[l];
-
-                    } else {
-                        nextIndexToStart = l;   //keep looping to the right until value is not a number
-                        break; //if operator set next index
-                    }
-                }
-                //loop 2
-                for (var v = b - 1; v >= 0; v--) {
-                    if (!(isNaN(parseFloat(newArray[v])))) {
-                        num1 = newArray[v] + num1;
-                        //console.log('num1 :' + num1); //keep looping to the left until value is not a number
-                    }else if(newArray[v] instanceof calculation){
-                            num1 = newArray[v].value;
-                        break;
-                    } else {
-                        break;
-                    }
-                }
-                //still in if statement
-
-                var calculationObject = new calculation(parseFloat(num1), newArray[b], parseFloat(num2)); //after we have num1 and two, make calc object
-                num1 = '';
-                num2 = '';
-                //parenths.. replace original parenths with calc object
-
+        //it broke here be carefull
+        for(var z = 0; z<newString.length; z++){
+            if ( (newString[z]==='(')|| (newString[z]===')') ){
+                numOfPerenths += 1;
             }
-
         }
+        if(numOfPerenths===0){ //if there's no parenths in string..
+            finalArray = newString.split(''); //make and array.. grab num1 and num2.. run calculation method on operator
+            console.log(finalArray);
+            for(var c = 0; c<finalArray.length; c++){
+                if( (finalArray[c]==='-')||(finalArray[c]==='+')||(finalArray[c]==='x')||(finalArray[c]==='/')||(finalArray[c]==='*') ){
+                    finalArray[c] = self.createItem( finalArray[c] ); //create operator object
+
+                    console.log(finalArray);
+                    //loop 1 get num2 right of op
+                    for(var a = c + 1; a<finalArray.length;a++){
+                        if( !(isNaN(parseFloat(finalArray[a]))) ){ //starting one index to the right of operator
+                            num2 += finalArray[a];
+                        }
+                    }
+                    console.log('num2 ' + ' ' + num2);
+
+                    // loop 2   get num 1 left of op
+                    for(var e = c; e >= -5;e--){
+                        console.log('hello');
+                        console.log(console.log('c' + ' ' + c));
+                        if(!(isNaN(parseFloat(finalArray[e])))){ //starting one index to the right of operator
+                            num1 = finalArray[e] + num1;
+                        }
+                    }
+                    console.log('num1 ' + ' ' + num1);
+                    var newcalcVal = finalArray[c].calculate( parseFloat(num1), parseFloat(num2) );
+                    console.log(newcalcVal);
+                    self.array[0] = newcalcVal;
+                    console.log(self.array);
+                    return;
+                }
+            }
+            return;
+        }
+
+
+
     };
 
-        //var replacingChunk = string.substring( string.lastIndexOf('('), string.indexOf(')')+1) ;
-        //var objVal = newArray[0].value;
-        //var newString = string.replace(replacingChunk, objVal);
-        //console.log(newString);
-        ////it broke here be carefull
-        //for(var t = 0; t<newString.length; t++){
-        //    if ( (newString[t]==='(')|| (newString[t]===')') ){
-        //        numOfPerenths += 1;
-        //    }
-        //}
-        //if(numOfPerenths < 1){
-        //    console.log(newString);
-        //    return;
-        //}else{
-        //    this.calculateParenths(newString); //if there's more parentheses,, run the function again, until we have something like 5*55 or 555+34
-        //}
-        //return;
+
 
 
     //method that either updates the display, and the model, and desi
@@ -354,13 +343,13 @@ var calculator = function(callback) {
                                        // if the last item is ')' and also open and close count are equal..
                                         if(this.openCount === this.closeCount){
                                             self.calculateParenths(this.num1);
-
                                             //your'e going to want to make the op object and put into array[1].. but before make num1 into calculation object
                                         operator = this.createItem(value);   //otherwise.. create the operator object and stick it in arr[1]
                                         this.array.push(operator); //update model
                                         this.callback(value); //update view
                                         this.openCount = 0;
                                         this.closeCount = 0;//make parenths count back to 0
+                                            console.log(self.array);
                                         return;
                                         }
                                     }
@@ -384,12 +373,6 @@ var calculator = function(callback) {
                                     operator = this.createItem(value);
                                     this.array.push(operator); //update model
                                     this.callback(value); //update view
-
-
-                            //TODO need regex for parenth
-
-
-
 
                             break;
 
