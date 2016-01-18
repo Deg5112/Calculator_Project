@@ -1,14 +1,23 @@
 *{
     padding: 0 !important;
-    border: 1px solid black;
+}
+
+h1, p {
+    text-align: center;
+    color: white !important;
+
 }
 
 body{
     width: 96vw;
-    height: 40em;
     position: relative;
     font-size: 4.5em !important;
+    background-color: #100E0E !important;
 
+}
+
+p {
+    font-size: .5em;
 }
 
 .btn-default {
@@ -42,7 +51,7 @@ body div:first-child{
 
 
 .col-xs-6.col-xs-offset-3.text-center {
-    margin-top: 10%;
+    margin-top: 4%;
 }
 
 .col-xs-12.btn.btn-default {
