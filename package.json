@@ -1,0 +1,28 @@
+{
+  "name": "portfolio",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Deg5112/Portfolio.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Deg5112/Portfolio/issues"
+  },
+  "homepage": "https://github.com/Deg5112/Portfolio#readme",
+  "devDependencies": {
+    "angular-route": "^1.5.0",
+    "gulp-cssnano": "^2.1.1",
+    "gulp-ngmin": "^0.3.0"
+  },
+  "dependencies": {
+    "express": "^4.14.0",
+  }
+}
